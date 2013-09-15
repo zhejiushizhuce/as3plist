@@ -1,3 +1,11 @@
+# Google Code
+http://code.google.com/p/as3plist/
+
+# Build the swc file:
+
+1. open the `build.properties`, modify FLEX_HOME
+2. `ant` 
+   
 # Introduction #
 This is a small library to use plist files for flash contents.
 
