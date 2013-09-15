@@ -1,5 +1,7 @@
-# Google Code
-http://code.google.com/p/as3plist/
+# Original project
+
+* In Google Code: <http://code.google.com/p/as3plist/>
+* In Github: <https://github.com/f60k/as3plist>
 
 # Build the swc file:
 
