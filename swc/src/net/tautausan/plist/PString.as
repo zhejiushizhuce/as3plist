@@ -21,27 +21,51 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
- package net.tautausan.plist
+package net.tautausan.plist
 {
-	/**
-	 * Property List String 
-	 * @author dai
-	 * 
-	 */	
-	public class PString extends PlistElement
+/**
+ * Property List String 
+ * @author dai
+ * @author zrong(zengrong.net) 2013-09-14
+ */	
+public class PString extends PlistElement implements ISimplePlistElement
+{
+	public static function parse($x:XML):PString
 	{
-		public function PString(x:XML)
-		{
-			super(x);
-		}
-		
-		override public function get object():*
-		{
-			if(!data)
-			{
-				return x.toString();
-			}
-			return data;
-		}
+		var __element:PString = new PString();
+		__element.xml = $x;
+		return __element;
 	}
+
+	public function PString($value:String=null)
+	{
+		init(PlistTags.STRING);
+		if($value) object = $value;
+	}
+	
+	override public function get object():*
+	{
+		if(isDirty || !data)
+		{
+			this.data = x.toString();
+		}
+		return data;
+	}
+	
+	override public function set object($value:*):void
+	{
+		if($value is String)
+		{
+			x.setChildren($value);
+		}
+		else
+		{
+			if($value === null || $value === undefined)
+				x.setChildren("");
+			else
+				x.setChildren($value.toString());
+		}
+		isDirty = true;
+	}
+}
 }

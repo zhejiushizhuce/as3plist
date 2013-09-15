@@ -23,56 +23,89 @@
  */
  package net.tautausan.plist
 {
-	/**
-	 *	Property List ver 1.0 
-	 * @author dai
-	 * 
-	 */	
-	public class Plist10 extends Plist
+/**
+ *	Property List ver 1.0 
+ * @author dai
+ * @author zrong(zengrong.net) 2013-09-14
+ */	
+public class Plist10 extends Plist
+{
+	protected var data:PlistElement;
+	protected static const XML_HEADER:String = '<?xml version="1.0" encoding="UTF-8"?>\n<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">\n';
+	
+	public function Plist10()
 	{
-		protected var data:Object;
+		super();
+	}
+	
+	private var isDirty:Boolean = true;
+	
+	public function get root():PlistElement
+	{
+		return data;
+	}
+	
+	public function set root($value:PlistElement):void
+	{
+		data = $value;
+		x = <plist/>;
+		x.@version = "1.0";
+		x.appendChild(data.xml);
+		//if($value is PDict || $value is PArray)
+		//{
+			//data = $value;
+		//}
+		//else
+		//{
+			//throw TypeError("You must provide a PDict or PArray !");
+		//}
+	}
+	
+	override public function toXMLString():String
+	{
+		if(this.x) return this.x.toXMLString();
+		return "";
+	}
+	
+	override public function toString():String
+	{
+		var __xmlstr:String = toXMLString();
+		if(__xmlstr) return XML_HEADER + __xmlstr;
+		return "";
+	}
+	
+	override public function parse(xmlStr:String):void
+	{
+		x = new XML(xmlStr);
+		parseXML();
+	}
+	
+	override public function set xml($x:XML):void
+	{
+		super.xml = $x;
+		parseXML();
 		
-		public function Plist10()
+	}
+	
+	private function parseXML():void
+	{
+		if(x.localName() != PlistTags.PLIST)
 		{
-			super();
-			
-			data=new Object();
+			throw TypeError("You must provide a plist file!");
 		}
-		
-		public function get root():Object
+		if(x[PlistTags.DICT])
 		{
-			return data;
+			var __x:* = x.child(0);
+			data = PDict.parse(x.child(0)[0]);
 		}
-		
-		override public function parse(xmlStr:String):void
+		else if(x[PlistTags.ARRAY])
 		{
-			x=new XML(xmlStr);
-						
-			if(x.dict==null)
-			{
-				data=null;
-			}
-			else
-			{
-				data=new Object();
-				var node:XML;
-				var key:XML;
-				
-				for each(node in x.dict.*)
-				{
-					if(node.name()=="key")
-					{
-						key=node;
-					}
-					else
-					{
-						if(key)
-						{
-							data[key]=ParseUtils.valueFromXML(node);
-						}
-					}
-				}
-			}
+			data = PArray.parse(x.child(0)[0]);
+		}
+		else
+		{
+			data = ParseUtils.valueFromXML(x.child(0));
 		}
 	}
+}
 }

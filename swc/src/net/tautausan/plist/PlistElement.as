@@ -36,39 +36,57 @@
 		protected var x:XML;
 		protected var data:*;
 		
-		public function PlistElement(x:XML)
+		protected var isDirty:Boolean = true;
+		
+		//public function PlistElement($x:XML)
+		//{
+			//this.xml = $x;
+		//}
+		public function PlistElement()
 		{
-			this.x=x;
-			this.data=object;
+		}
+		
+		protected function init($plistTag:String):void
+		{
+			this.x = new XML("<" + $plistTag + "/>");
 		}
 		
 		override flash_proxy function getProperty(name:*):* 
 		{
-			
-			var data:* = this.object;
-			
-			if(data && data[name])
+			var __data:* = object;
+			if(__data && __data[name])
 			{
-				return data[name];
+				return __data[name];
 			}
 			return null;
 		}
 		
 		override flash_proxy function callProperty(name:*, ... rest):*
 		{
-			var data:* = this.object;
+			var __data:* = object;
+			if(!__data ) return "";
 			
 			if(rest.length<1)
 			{
-				return data[name]();
+				return __data[name]();
 			}
-			return data[name](rest);
+			return __data[name](rest);
+		}
+		
+		public function toXMLString():String
+		{
+			return x.toXMLString();
+		}
+		
+		public function toString():String
+		{
+			return x.toString();
 		}
 		
 		public function set xml(x:XML):void
 		{
-			this.x=x;
-			this.data=object;
+			this.x = x;
+			isDirty = true;
 		}
 		
 		public function get xml():XML
@@ -80,6 +98,15 @@
 		{
 			return this.data;
 		}
-
+		
+		public function set object($value:*):void
+		{
+			this.data = $value;
+		}
+		
+		public function get isSimple():Boolean
+		{
+			return this is ISimplePlistElement;
+		}
 	}
 }

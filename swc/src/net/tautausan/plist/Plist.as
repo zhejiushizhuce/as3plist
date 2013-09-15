@@ -21,35 +21,45 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
- package net.tautausan.plist
+package net.tautausan.plist
 {
-	import flash.errors.IllegalOperationError;
-	/**
-	 *	Property List Foundation 
-	 * @author dai
-	 * 
-	 */	
-	public class Plist
+import flash.errors.IllegalOperationError;
+/**
+ *	Property List Foundation 
+ * @author dai
+ * @author zrong(zengrong.net) 2013-09-14
+ */	
+public class Plist
+{
+	protected var x:XML;
+	
+	public function Plist()
 	{
-		protected var x:XML;
-		
-		public function Plist()
-		{
-		}
-				
-		public function parse(xmlStr:String):void
-		{
-			throw new IllegalOperationError("This is an abstract method.");
-		}
-		
-		public function set xml(x:XML):void
-		{
-			this.x=x;
-		}
-		
-		public function get xml():XML
-		{
-			return x;
-		}
 	}
+			
+	public function parse(xmlStr:String):void
+	{
+		throw new IllegalOperationError("This is an abstract method.");
+	}
+	
+	public function toXMLString():String
+	{
+		return x.toXMLString();
+	}
+	
+	public function toString():String
+	{
+		return toXMLString();
+	}
+	
+	public function set xml(x:XML):void
+	{
+		this.x=x;
+	}
+	
+	public function get xml():XML
+	{
+		return x;
+	}
+}
 }

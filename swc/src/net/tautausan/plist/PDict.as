@@ -23,46 +23,85 @@
  */
 package net.tautausan.plist
 {
-	import flash.utils.*;
-	/**
-	 *	Property List Dictionary 
-	 * @author dai
-	 * 
-	 */	
-	dynamic public class PDict extends PlistElement
+import flash.utils.Dictionary;
+import flash.utils.flash_proxy;
+use namespace flash_proxy;
+/**
+ * Property List Dictionary 
+ * @author dai
+ * @author zrong(zengrong.net) 2013-09-14
+ */	
+dynamic public class PDict extends PlistElement
+{
+	public static function parse($x:XML):PDict
 	{
-		
-		public function PDict(x:XML)
+		var __element:PDict = new PDict();
+		__element.xml = $x;
+		return __element;
+	}
+	
+	public function PDict($value:Dictionary=null)
+	{
+		init(PlistTags.DICT);
+	}
+	
+	override flash_proxy function setProperty($name:*, $value:*):void
+	{
+		addValue($name, $value);
+	}
+	
+	override public function get object():*
+	{
+		if(isDirty || !data)
 		{
-			super(x);
-		}
-		
-		override public function get object():*
-		{
-			
-			if(!data)
+			this.data = new Dictionary();
+			var __key:XML;
+			var __node:XML;
+			for each(__node in x.*)
 			{
-				var dic:Object=new Object();
-				var key:XML;
-				var node:XML;
-				for each(node in x.*)
+				if(__node.name()==PlistTags.KEY)
 				{
-					if(node.name()=="key")
+					__key=__node;
+				}
+				else
+				{
+					if(__key)
 					{
-						key=node;
-					}
-					else
-					{
-						if(key)
-						{
-							dic[key]=ParseUtils.valueFromXML(node);
-						}
+						this.data[__key]=ParseUtils.valueFromXML(__node);
 					}
 				}
-				return dic;
 			}
-			return data;
+			isDirty = false;
 		}
-		
+		return this.data;
 	}
+	
+	public function addValue($key:String, $value:*):PDict
+	{
+		var __element:PlistElement = ParseUtils.valueToElement($value);
+		var __keyxml:XML = new XML("<" + PlistTags.KEY + "/>");
+		__keyxml.setChildren($key);
+		x.appendChild(__keyxml);
+		x.appendChild(__element.xml);
+		isDirty = true;
+		return this;
+	}
+	
+	override public function set object($value:*):void
+	{
+		if($value is Dictionary)
+		{
+			var __dict:Dictionary = $value as Dictionary;
+			for(var __key:String in __dict)
+			{
+				addValue(__key, __dict[__key]);
+			}
+		}
+		else
+		{
+			throw new TypeError("The value must be a Dictionary !");
+		}
+		isDirty = true;
+	}
+}
 }

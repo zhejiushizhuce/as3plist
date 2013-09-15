@@ -1,1 +1,4 @@
 swc/bin-debug/
+sample/bin/
+sample/obj/
+sample/lib/

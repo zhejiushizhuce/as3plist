@@ -23,47 +23,75 @@
  */
  package net.tautausan.plist
 {
-	/**
-	 *	Useful Utility for parsing data 
-	 * @author dai
-	 * 
-	 */	
-	public class ParseUtils
+import flash.utils.Dictionary;
+/**
+ *	Useful Utility for parsing data 
+ * @author dai
+ * @author zrong(zengrong.net) 2013-09-14
+ */	
+public class ParseUtils
+{
+	static public function valueToElement($value:*):PlistElement
 	{
-		public function ParseUtils()
+		if($value is PlistElement) return $value as PlistElement;
+		var __element:PlistElement; 
+		if($value is int || $value is Number)
 		{
+			__element = new PNumber($value as Number);
 		}
-		
-		
-		static public function valueFromXML(node:XML):*
+		else if($value is String)
 		{
-			var val:*;
-
-			switch(node.name().toString())
-			{
-				case "array":
-					val=new PArray(node);
-					break;
-				case "dict":
-					val=new PDict(node);
-					break;
-				case "date":
-					val=new PDate(node);
-					break;
-				case "string":
-				case "data": 
-					val=new PString(node);
-					break;
-				case "true": 
-				case "false":
-					val=new PBoolean(node);
-					break;
-				case "real":
-				case "integer":
-					val=new PNumber(node);
-
-			}
-			return val;
+			__element = new PString($value as String);
 		}
+		else if($value is Boolean)
+		{
+			__element = new PBoolean($value as Boolean);
+		}
+		else if($value is Date)
+		{
+			__element = new PDate($value as Date);
+		}
+		else if($value is Array)
+		{
+			__element = new PArray($value as Array);
+		}
+		else if($value is Dictionary)
+		{
+			__element = new PDict($value as Dictionary);
+		}
+		return __element;
 	}
+	
+	static public function valueFromXML(node:XML):PlistElement
+	{
+		var val:PlistElement;
+
+		switch(node.name().toString())
+		{
+			case PlistTags.ARRAY:
+				val=PArray.parse(node);
+				break;
+			case PlistTags.DICT:
+				val=PDict.parse(node);
+				break;
+			case PlistTags.DATE:
+				val=PDate.parse(node);
+				break;
+			case PlistTags.DATA:
+				val = PData.parse(node);
+				break;
+			case PlistTags.STRING:
+				val=PString.parse(node);
+				break;
+			case PlistTags.TRUE: 
+			case PlistTags.FALSE:
+				val=PBoolean.parse(node);
+				break;
+			case PlistTags.REAL:
+			case PlistTags.INTEGER:
+				val=PNumber.parse(node);
+		}
+		return val;
+	}
+}
 }

@@ -21,36 +21,59 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
- package net.tautausan.plist
+package net.tautausan.plist
 {
-	/**
-	 *	Property List Boolean 
-	 * @author dai
-	 * 
-	 */	
-	public class PBoolean extends PlistElement
+/**
+ *	Property List Boolean 
+ * @author dai
+ * @author zrong(zengrong.net) 2013-09-14
+ * 
+ */	
+public class PBoolean extends PlistElement implements ISimplePlistElement
+{
+	public static function parse($x:XML):PBoolean
 	{
-		public function PBoolean(x:XML)
-		{
-			super(x);
-		}
-		
-		
-		override public function get object():*
-		{
-			if(!data)
-			{
-			
-				if(x.name()=="true")
-				{
-					return true;
-				}
-				else if(x.name()=="false")
-				{
-					return false;
-				}
-			}
-			return data;
-		}
+		var __element:PBoolean = new PBoolean();
+		__element.xml = $x;
+		return __element;
 	}
+	
+	public function PBoolean($value:Boolean=false)
+	{
+		init($value ? PlistTags.TRUE : PlistTags.FALSE);
+	}
+	
+	override public function get object():*
+	{
+		if(isDirty || !data)
+		{
+			if(x.name()==PlistTags.TRUE)
+			{
+				data = true;
+			}
+			else if(x.name()==PlistTags.FALSE)
+			{
+				data = false;
+			}
+			isDirty = false;
+		}
+		return data;
+	}
+	
+	override public function set object($value:*):void
+	{
+		if($value is Boolean)
+		{
+			if($value as Boolean)
+				x.setName(PlistTags.TRUE);
+			else
+				x.setName(PlistTags.FALSE);
+		}
+		else
+		{
+			object = Boolean($value);
+		}
+		isDirty = true;
+	}
+}
 }
