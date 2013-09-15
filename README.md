@@ -1,25 +1,36 @@
-# Original project
+# Introduction
+
+This is a small library to use plist files for flash contents.
+
+## Features list
+
+* XML based property list support
+* plist 1.0 support
+* access properties directly using dot syntax
+* Binary based property list support (tentative)
+
+## Original project
+
+This project is modified form [zrong][blog] .
+
+The original project are there:
 
 * In Google Code: <http://code.google.com/p/as3plist/>
 * In Github: <https://github.com/f60k/as3plist>
 
-# Build the swc file
+## Download the SWC file
+
+Enter 'swc/bin' and click `as3plist.swc`.
+
+## Build the SWC file
 
 1. open this file: `swc/build.properties`, and modify FLEX_HOME ;
 2. `ant` 
-   
-# Introduction
-This is a small library to use plist files for flash contents.
-
-Details
-Features list
-
-XML based property list support
-plist 1.0 support
-access properties directly using dot syntax
-Binary based property list support (tentative)
 
 # Getting Started
+
+## For text format
+
 1. load plist file with URLLoader and prepare to capture event from URLLoader.
 
 ```actionscript
@@ -41,7 +52,7 @@ private function onComplete(e:Event):void
 }
 ```
 
-# For Binary Format
+## For Binary Format
 
 Invoke getXML method before parse loaded data within onComplete method.
 
@@ -60,7 +71,7 @@ private function onComplete(e:Event):void
 }
 ```
 
-# Access Plist Node Value #
+# Access Plist Node Value
 
 ## Get value
 
@@ -122,7 +133,7 @@ trace(plist.root.arr_key is Array); //false
 trace(plist.root.arr_key.object is Array); //true
 ```
 
-sample.plst
+## sample.plst
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -166,9 +177,12 @@ sample.plst
 </dict>
 </plist>
 ```
-# CDATA
+## CDATA
 
 CDATA directive is useful to write html tags in xml. You do not have to care about escape strings.
 
 	<string>&lt;a href=&quot;http://www.google.com&quot;&gt;hello&lt;/a&gt;</string>
 	<string><![CDATA[<a href="http://www.google.com">hello</a>]]></string>
+
+[plist]: https://developer.apple.com/library/mac/documentation/Darwin/Reference/ManPages/man5/plist.5.html
+[blog]: http://zengrong.net
