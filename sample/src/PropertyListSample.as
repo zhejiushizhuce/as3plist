@@ -1,19 +1,8 @@
 package 
 {
-import flash.display.BitmapEncodingColorSpace;
 import flash.display.Sprite;
 import flash.events.Event;
-import mx.graphics.shaderClasses.LuminosityMaskShader_ShaderClass;
-import net.tautausan.plist.PArray;
-import net.tautausan.plist.PBoolean;
-import net.tautausan.plist.PDict;
-import net.tautausan.plist.Plist;
-import net.tautausan.plist.Plist10;
-import net.tautausan.plist.PlistElement;
-import net.tautausan.plist.PNumber;
-import net.tautausan.plist.PString;
-//import org.zengrong.file.PropertyList;
-
+import org.zengrong.file.plist.*;
 /**
  * 
  * @author zrong

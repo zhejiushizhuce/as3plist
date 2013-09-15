@@ -1,4 +1,4 @@
-package net.tautausan.plist 
+package org.zengrong.file.plist 
 {
 /**
  * about simple PlistElement, you can use this syntax to set value of the element: <code>element.object = value;</code>

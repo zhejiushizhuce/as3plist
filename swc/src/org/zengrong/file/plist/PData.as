@@ -21,69 +21,54 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package net.tautausan.plist
+package org.zengrong.file.plist
 {
+import flash.utils.ByteArray;
+import mx.utils.Base64Encoder;
+import mx.utils.Base64Decoder;
 /**
- *Property List Array 
- * @author dai
- * @author zrong(zengrong.net) 2013-09-14
- * 
+ * Property List Data
+ * @author zrong (zengrong.net) 2013-09-14
  */	
-public class PArray extends PlistElement
+public class PData extends PlistElement implements ISimplePlistElement
 {
-	public static function parse($x:XML):PArray
+	public static function parse($x:XML):PData
 	{
-		var __element:PArray = new PArray();
+		var __element:PData = new PData();
 		__element.xml = $x;
 		return __element;
 	}
 	
-	public function PArray($array:Array=null)
+	public function PData($value:ByteArray=null)
 	{
-		init(PlistTags.ARRAY);
-		if($array && $array.length > 0) object = $array;
+		init(PlistTags.DATA);
+		if($value) object = $value;
 	}
 	
 	override public function get object():*
 	{
 		if(isDirty || !data)
 		{
-			var i:uint;
-			var length:uint=x.*.length();
-			this.data = new Array();
-			for(i=0;i<length;i++)
-			{
-				this.data.push(ParseUtils.valueFromXML(x.*[i]));
-			}
+			var __decoder:Base64Decoder = new Base64Decoder();
+			__decoder.decode(x.toString());
+			this.data = __decoder.toByteArray();
 			isDirty = false;
 		}
 		return data;
 	}
 	
-	public function addValue(...$values:*):PArray
-	{
-		for (var i:int = 0; i < $values.length; i++) 
-		{
-			var __element:PlistElement = ParseUtils.valueToElement($values[i]);
-			x.appendChild(__element.xml);
-		}
-		isDirty = true;
-		return this;
-	}
-	
 	override public function set object($value:*):void
 	{
-		if($value is Array)
+		if($value is ByteArray)
 		{
-			var __arr:Array = $value as Array;
-			for (var i:int = 0; i < __arr.length; i++) 
-			{
-				addValue(__arr[i]);
-			}
+			var __encoder:Base64Encoder = new Base64Encoder();
+			__encoder.encodeBytes($value as ByteArray);
+			__encoder.flush();
+			x.setChildren(__encoder.toString());
 		}
 		else
 		{
-			throw new TypeError("The value must be a Array !");
+			throw new TypeError("The value must be a ByteArray !");
 		}
 		isDirty = true;
 	}

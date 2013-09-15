@@ -21,45 +21,59 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package net.tautausan.plist
+package org.zengrong.file.plist
 {
-import flash.errors.IllegalOperationError;
 /**
- *	Property List Foundation 
+ *	Property List Boolean 
  * @author dai
  * @author zrong(zengrong.net) 2013-09-14
+ * 
  */	
-public class Plist
+public class PBoolean extends PlistElement implements ISimplePlistElement
 {
-	protected var x:XML;
-	
-	public function Plist()
+	public static function parse($x:XML):PBoolean
 	{
-	}
-			
-	public function parse(xmlStr:String):void
-	{
-		throw new IllegalOperationError("This is an abstract method.");
+		var __element:PBoolean = new PBoolean();
+		__element.xml = $x;
+		return __element;
 	}
 	
-	public function toXMLString():String
+	public function PBoolean($value:Boolean=false)
 	{
-		return x.toXMLString();
+		init($value ? PlistTags.TRUE : PlistTags.FALSE);
 	}
 	
-	public function toString():String
+	override public function get object():*
 	{
-		return toXMLString();
+		if(isDirty || !data)
+		{
+			if(x.name()==PlistTags.TRUE)
+			{
+				data = true;
+			}
+			else if(x.name()==PlistTags.FALSE)
+			{
+				data = false;
+			}
+			isDirty = false;
+		}
+		return data;
 	}
 	
-	public function set xml(x:XML):void
+	override public function set object($value:*):void
 	{
-		this.x=x;
-	}
-	
-	public function get xml():XML
-	{
-		return x;
+		if($value is Boolean)
+		{
+			if($value as Boolean)
+				x.setName(PlistTags.TRUE);
+			else
+				x.setName(PlistTags.FALSE);
+		}
+		else
+		{
+			object = Boolean($value);
+		}
+		isDirty = true;
 	}
 }
 }

@@ -21,49 +21,69 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package net.tautausan.plist
+package org.zengrong.file.plist
 {
 /**
- * Property List String 
+ *Property List Array 
  * @author dai
  * @author zrong(zengrong.net) 2013-09-14
+ * 
  */	
-public class PString extends PlistElement implements ISimplePlistElement
+public class PArray extends PlistElement
 {
-	public static function parse($x:XML):PString
+	public static function parse($x:XML):PArray
 	{
-		var __element:PString = new PString();
+		var __element:PArray = new PArray();
 		__element.xml = $x;
 		return __element;
 	}
-
-	public function PString($value:String=null)
+	
+	public function PArray($array:Array=null)
 	{
-		init(PlistTags.STRING);
-		if($value) object = $value;
+		init(PlistTags.ARRAY);
+		if($array && $array.length > 0) object = $array;
 	}
 	
 	override public function get object():*
 	{
 		if(isDirty || !data)
 		{
-			this.data = x.toString();
+			var i:uint;
+			var length:uint=x.*.length();
+			this.data = new Array();
+			for(i=0;i<length;i++)
+			{
+				this.data.push(ParseUtils.valueFromXML(x.*[i]));
+			}
+			isDirty = false;
 		}
 		return data;
 	}
 	
+	public function addValue(...$values:*):PArray
+	{
+		for (var i:int = 0; i < $values.length; i++) 
+		{
+			var __element:PlistElement = ParseUtils.valueToElement($values[i]);
+			x.appendChild(__element.xml);
+		}
+		isDirty = true;
+		return this;
+	}
+	
 	override public function set object($value:*):void
 	{
-		if($value is String)
+		if($value is Array)
 		{
-			x.setChildren($value);
+			var __arr:Array = $value as Array;
+			for (var i:int = 0; i < __arr.length; i++) 
+			{
+				addValue(__arr[i]);
+			}
 		}
 		else
 		{
-			if($value === null || $value === undefined)
-				x.setChildren("");
-			else
-				x.setChildren($value.toString());
+			throw new TypeError("The value must be a Array !");
 		}
 		isDirty = true;
 	}

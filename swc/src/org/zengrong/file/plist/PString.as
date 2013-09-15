@@ -21,68 +21,49 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package net.tautausan.plist
+package org.zengrong.file.plist
 {
 /**
- * Property List Number 
+ * Property List String 
  * @author dai
  * @author zrong(zengrong.net) 2013-09-14
  */	
-public class PNumber extends PlistElement implements ISimplePlistElement
+public class PString extends PlistElement implements ISimplePlistElement
 {
-	public static function parse($x:XML):PNumber
+	public static function parse($x:XML):PString
 	{
-		var __element:PNumber = new PNumber();
+		var __element:PString = new PString();
 		__element.xml = $x;
 		return __element;
 	}
-	
-	public function PNumber($number:Number=0)
+
+	public function PString($value:String=null)
 	{
-		init(PlistTags.INTEGER);
-		this.object = $number;
+		init(PlistTags.STRING);
+		if($value) object = $value;
 	}
 	
 	override public function get object():*
 	{
 		if(isDirty || !data)
 		{
-			if(x.name()==PlistTags.REAL)
-			{
-				data = parseFloat(x.toString());
-			}
-			else if(x.name()==PlistTags.INTEGER)
-			{
-				data = parseInt(x.toString(), 10);
-			}
-			isDirty = false;
+			this.data = x.toString();
 		}
 		return data;
 	}
 	
 	override public function set object($value:*):void
 	{
-		if($value is int)
+		if($value is String)
 		{
-			x.setName(PlistTags.INTEGER);
-			x.setChildren($value);
-		}
-		else if($value is Number)
-		{
-			x.setName(PlistTags.REAL);
 			x.setChildren($value);
 		}
 		else
 		{
-			var __num:Number = parseInt($value);
-			if(isNaN(__num))
-			{
-				throw TypeError("The value must be a Number, or parseInt($value) != NaN .");
-			}
+			if($value === null || $value === undefined)
+				x.setChildren("");
 			else
-			{
-				object = int(__num);
-			}
+				x.setChildren($value.toString());
 		}
 		isDirty = true;
 	}

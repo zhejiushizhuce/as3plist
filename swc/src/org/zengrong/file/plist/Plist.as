@@ -21,56 +21,45 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package net.tautausan.plist
+package org.zengrong.file.plist
 {
-import flash.utils.ByteArray;
-import mx.utils.Base64Encoder;
-import mx.utils.Base64Decoder;
+import flash.errors.IllegalOperationError;
 /**
- * Property List Data
- * @author zrong (zengrong.net) 2013-09-14
+ *	Property List Foundation 
+ * @author dai
+ * @author zrong(zengrong.net) 2013-09-14
  */	
-public class PData extends PlistElement implements ISimplePlistElement
+public class Plist
 {
-	public static function parse($x:XML):PData
+	protected var x:XML;
+	
+	public function Plist()
 	{
-		var __element:PData = new PData();
-		__element.xml = $x;
-		return __element;
+	}
+			
+	public function parse(xmlStr:String):void
+	{
+		throw new IllegalOperationError("This is an abstract method.");
 	}
 	
-	public function PData($value:ByteArray=null)
+	public function toXMLString():String
 	{
-		init(PlistTags.DATA);
-		if($value) object = $value;
+		return x.toXMLString();
 	}
 	
-	override public function get object():*
+	public function toString():String
 	{
-		if(isDirty || !data)
-		{
-			var __decoder:Base64Decoder = new Base64Decoder();
-			__decoder.decode(x.toString());
-			this.data = __decoder.toByteArray();
-			isDirty = false;
-		}
-		return data;
+		return toXMLString();
 	}
 	
-	override public function set object($value:*):void
+	public function set xml(x:XML):void
 	{
-		if($value is ByteArray)
-		{
-			var __encoder:Base64Encoder = new Base64Encoder();
-			__encoder.encodeBytes($value as ByteArray);
-			__encoder.flush();
-			x.setChildren(__encoder.toString());
-		}
-		else
-		{
-			throw new TypeError("The value must be a ByteArray !");
-		}
-		isDirty = true;
+		this.x=x;
+	}
+	
+	public function get xml():XML
+	{
+		return x;
 	}
 }
 }

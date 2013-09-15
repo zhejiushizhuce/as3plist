@@ -21,39 +21,39 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package net.tautausan.plist
+package org.zengrong.file.plist
 {
 /**
- *	Property List Boolean 
+ * Property List Number 
  * @author dai
  * @author zrong(zengrong.net) 2013-09-14
- * 
  */	
-public class PBoolean extends PlistElement implements ISimplePlistElement
+public class PNumber extends PlistElement implements ISimplePlistElement
 {
-	public static function parse($x:XML):PBoolean
+	public static function parse($x:XML):PNumber
 	{
-		var __element:PBoolean = new PBoolean();
+		var __element:PNumber = new PNumber();
 		__element.xml = $x;
 		return __element;
 	}
 	
-	public function PBoolean($value:Boolean=false)
+	public function PNumber($number:Number=0)
 	{
-		init($value ? PlistTags.TRUE : PlistTags.FALSE);
+		init(PlistTags.INTEGER);
+		this.object = $number;
 	}
 	
 	override public function get object():*
 	{
 		if(isDirty || !data)
 		{
-			if(x.name()==PlistTags.TRUE)
+			if(x.name()==PlistTags.REAL)
 			{
-				data = true;
+				data = parseFloat(x.toString());
 			}
-			else if(x.name()==PlistTags.FALSE)
+			else if(x.name()==PlistTags.INTEGER)
 			{
-				data = false;
+				data = parseInt(x.toString(), 10);
 			}
 			isDirty = false;
 		}
@@ -62,16 +62,27 @@ public class PBoolean extends PlistElement implements ISimplePlistElement
 	
 	override public function set object($value:*):void
 	{
-		if($value is Boolean)
+		if($value is int)
 		{
-			if($value as Boolean)
-				x.setName(PlistTags.TRUE);
-			else
-				x.setName(PlistTags.FALSE);
+			x.setName(PlistTags.INTEGER);
+			x.setChildren($value);
+		}
+		else if($value is Number)
+		{
+			x.setName(PlistTags.REAL);
+			x.setChildren($value);
 		}
 		else
 		{
-			object = Boolean($value);
+			var __num:Number = parseInt($value);
+			if(isNaN(__num))
+			{
+				throw TypeError("The value must be a Number, or parseInt($value) != NaN .");
+			}
+			else
+			{
+				object = int(__num);
+			}
 		}
 		isDirty = true;
 	}
