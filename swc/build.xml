@@ -41,9 +41,9 @@
 			<arg line='-include-classes ${classlist}'/>
 			<arg line='-output ${swf.file}'/>
             <arg line='-swf-version ${var.swfversion}'/>
-			<!--
+
 			<arg value="-library-path+=${LIB_DIR}"/>
-			-->
+
 			<arg value="-load-config+=air-config.xml"/>
             <arg line='-external-library-path+="${FLEX_FRAMEWORKS}/libs/framework.swc"'/>
 			<arg line='-external-library-path+="${FLEX_FRAMEWORKS}/libs/spark.swc"'/>
