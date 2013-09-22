@@ -3,6 +3,8 @@ package
 import flash.display.Sprite;
 import flash.events.Event;
 import org.zengrong.file.plist.*;
+import org.zengrong.file.zwoptex.ZwoptexFormat2File;
+import org.zengrong.file.zwoptex.ZwoptexFormat2Frame;
 /**
  * 
  * @author zrong
@@ -66,9 +68,16 @@ public class PropertyListSample extends Sprite
 		__alist.parse(__olist.toString());
 		trace("-----");
 		trace(__alist.toString());
+		trace("-----zwoptex");
 		
 		//var __obj:Object = __plist.root.frames["parts-ali_bianzi.png"]
 		//trace(__plist.root.frames["parts-ali_bianzi.png"].object);
+		
+		var __zwoptex2:ZwoptexFormat2File = new ZwoptexFormat2File();
+		var __frame:ZwoptexFormat2Frame = new ZwoptexFormat2Frame();
+		__frame.setOffset(0, 0).setRotated(false).setSourceColorRect(0, 0, 100, 100).setSourceSize(100, 100).setFrame(50, 50, 100, 100);
+		__zwoptex2.setSize(100, 100).setRealTextureFileName("abc.png").setTextureFileName("abc.png").addFrame("test01", __frame);
+		trace(__zwoptex2.toString());
 
 	}
 }

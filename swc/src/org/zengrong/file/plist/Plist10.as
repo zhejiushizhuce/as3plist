@@ -87,7 +87,7 @@ public class Plist10 extends Plist
 		
 	}
 	
-	private function parseXML():void
+	protected function parseXML():void
 	{
 		if(x.localName() != PlistTags.PLIST)
 		{

@@ -29,7 +29,7 @@
 	/**
 	 *	Foundation of all Property List Elements 
 	 * @author dai
-	 * 
+	 * @author zrong(zengrong.net)
 	 */		
 	public class PlistElement extends Proxy
 	{

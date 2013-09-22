@@ -21,26 +21,41 @@
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 * THE SOFTWARE.
 */
-package org.zengrong.file.plist 
+package org.zengrong.file.zwoptex
 {
-/**
- * property list xml tags
- * @author zrong(zengrong.net)
- * Creation: 2013-09-13
- */
-public class PlistTags 
-{
-	public static const STRING:String = "string";
-	public static const REAL:String = "real";
-	public static const INTEGER:String = "integer";
-	public static const TRUE:String = "true";
-	public static const FALSE:String = "false";
-	public static const DATA:String = "data";
-	public static const DATE:String = "date";
-	public static const ARRAY:String = "array";
-	public static const DICT:String = "dict";
+import flash.utils.Dictionary;
 
-	public static const PLIST:String = "plist";
-	public static const KEY:String = "key";
+import org.zengrong.file.plist.PDict;
+
+/**
+ * Save a Zwoptex metadata info in format 2
+ * @author zrong
+ * Creation: 2013-09-22
+ */
+public class ZwoptexFormat2Metadata extends PDict
+{
+	public function ZwoptexFormat2Metadata($value:Dictionary=null)
+	{
+		super($value);
+		this.addValue("format", 2);
+	}
+	
+	public function setRealTextureFileName($fileName:String):ZwoptexFormat2Metadata
+	{
+		this.addValue("realTextureFileName", $fileName);
+		return this;
+	}
+	
+	public function setTextureFileName($fileName:String):ZwoptexFormat2Metadata
+	{
+		this.addValue("textureFileName", $fileName);
+		return this;
+	}
+	
+	public function setSize($width:int, $height:int):ZwoptexFormat2Metadata
+	{
+		this.addValue("size", "{"+$width+","+$height+"}");
+		return this;
+	}
 }
 }
